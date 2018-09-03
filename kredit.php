@@ -255,7 +255,7 @@ foreach ($arr_term as $month => $percent) {
             ->getAllBorders()
             ->applyFromArray(['style' => PHPExcel_Style_Border::BORDER_THIN]);
         //--------------------------------------------
-        echo "мес - {$month}, percent - {$arr_term[$month]}, price car - {$price_car}, prepayment - {$prepayment}, percents - {$percents}, total - {$total}, monthly payment - {$monthly_payment}" . PHP_EOL;
+        echo "month - {$month}, percent - {$arr_term[$month]}, price car - {$price_car}, prepayment - {$prepayment}, percents - {$percents}, total - {$total}, monthly payment - {$monthly_payment}" . PHP_EOL;
 
         ++$row;
     }
@@ -272,3 +272,5 @@ $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcelOutput, 'Excel2007');
 $file = __DIR__ . DIRECTORY_SEPARATOR . "Kredit.xlsx";
 
 $objWriter->save($file);
+
+echo PHP_EOL . "Your file - " . $file . PHP_EOL;
