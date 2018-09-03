@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
     <meta charset="utf-8">
@@ -112,7 +112,7 @@ $row = 0;
 
 foreach ($arr_term as $month => $percent) {
     if ($all_month or ($month == $month_get)) {
-        $row = $row + 1;
+        ++$row;
 
         $row_begin = $row;
 
@@ -139,7 +139,9 @@ foreach ($arr_term as $month => $percent) {
             ->getAlignment()
             ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         //--------------------------------------------
-        $row = $row + 1;
+        ++$row;
+
+        $row_cost = $row;
 
         $cell = "A{$row}";
 
@@ -159,7 +161,9 @@ foreach ($arr_term as $month => $percent) {
                 'endcolor'   => ['rgb' => 'FFFF00'],
             ]);
         //--------------------------------------------
-        $row = $row + 1;
+        ++$row;
+
+        $row_prepayment = $row;
 
         $cell = "A{$row}";
 
@@ -171,7 +175,9 @@ foreach ($arr_term as $month => $percent) {
         $objPHPExcelOutput->setActiveSheetIndex(0)
             ->setCellValue($cell, $prepayment);
         //--------------------------------------------
-        $row = $row + 1;
+        ++$row;
+
+        $row_real = $row;
 
         $cell = "A{$row}";
 
@@ -179,11 +185,14 @@ foreach ($arr_term as $month => $percent) {
             ->setCellValue($cell, "Стоимость с учетом аванса");
 
         $cell = "B{$row}";
+        $value = "=B{$row_cost}-B{$row_prepayment}";
 
         $objPHPExcelOutput->setActiveSheetIndex(0)
-            ->setCellValue($cell, $price_car - $prepayment);
+            ->setCellValue($cell, $value);    //$price_car - $prepayment);
         //--------------------------------------------
-        $row = $row + 1;
+        ++$row;
+
+        $row_percent = $row;
 
         $percents = round(($price_car - $prepayment) * $arr_term[$month] / 100, 0);
 
@@ -193,11 +202,14 @@ foreach ($arr_term as $month => $percent) {
             ->setCellValue($cell, "Проценты");
 
         $cell = "B{$row}";
+        $value = "=ROUND(B{$row_real}*{$arr_term[$month]}/100,0)";
 
         $objPHPExcelOutput->setActiveSheetIndex(0)
-            ->setCellValue($cell, $percents);
+            ->setCellValue($cell, $value);    // $percents);
         //--------------------------------------------
-        $row = $row + 1;
+        ++$row;
+
+        $row_total = $row;
 
         $total = $price_car - $prepayment + $percents;
 
@@ -207,11 +219,12 @@ foreach ($arr_term as $month => $percent) {
             ->setCellValue($cell, "Всего");
 
         $cell = "B{$row}";
+        $value = "=B{$row_cost}-B{$row_prepayment}+B{$row_percent}";
 
         $objPHPExcelOutput->setActiveSheetIndex(0)
-            ->setCellValue($cell, $total);
+            ->setCellValue($cell, $value);    // $total);
         //--------------------------------------------
-        $row = $row + 1;
+        ++$row;
 
         $monthly_payment = round($total / $month, 2);
 
@@ -221,9 +234,10 @@ foreach ($arr_term as $month => $percent) {
             ->setCellValue($cell, "Ежемесячный платеж");
 
         $cell = "B{$row}";
+        $value = "=B{$row_total}/{$month}";
 
         $objPHPExcelOutput->setActiveSheetIndex(0)
-            ->setCellValue($cell, $monthly_payment);
+            ->setCellValue($cell, $value);    // $monthly_payment);
 
         $objPHPExcelOutput->setActiveSheetIndex(0)
             ->getStyle($cell)
@@ -241,9 +255,9 @@ foreach ($arr_term as $month => $percent) {
             ->getAllBorders()
             ->applyFromArray(['style' => PHPExcel_Style_Border::BORDER_THIN]);
         //--------------------------------------------
-        echo "month - {$month}, percent - {$arr_term[$month]}, price car - {$price_car}, prepayment - {$prepayment}, percents - {$percents}, total - {$total}, monthly payment - {$monthly_payment}" . PHP_EOL;
+        echo "мес - {$month}, percent - {$arr_term[$month]}, price car - {$price_car}, prepayment - {$prepayment}, percents - {$percents}, total - {$total}, monthly payment - {$monthly_payment}" . PHP_EOL;
 
-        $row = $row + 1;
+        ++$row;
     }
 }
 
